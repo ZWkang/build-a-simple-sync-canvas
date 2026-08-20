@@ -1,6 +1,11 @@
 dist/
 node_modules/
 reference/
+release/
 .tmp/
+.tanstack/
+routeTree.gen.tmp
 
 .env
+apps/backend/data/*
+!apps/backend/data/.gitkeep

@@ -1,33 +1,19 @@
 {
-  "name": "monorepo-lib-template",
+  "name": "sync-canvas",
+  "version": "0.1.0",
   "private": true,
   "packageManager": "bun@1.2.19",
   "workspaces": [
-    "packages/*"
+    "apps/*"
   ],
-  "description": "A Bun-powered TypeScript monorepo template.",
-  "publishConfig": {
-    "access": "public"
-  },
+  "description": "A Bun workspace for the Sync Canvas frontend and backend applications.",
   "engines": {
-    "node": ">=22.13.0",
     "bun": ">=1.2.19"
   },
-  "author": {
-    "name": "zwkang",
-    "email": "kang95630@gmail.com"
-  },
-  "keywords": [
-    "bun",
-    "monorepo",
-    "typescript",
-    "template"
-  ],
-  "sideEffects": false,
   "devDependencies": {
-    "@changesets/cli": "^2.31.0",
     "@commitlint/cli": "^21.0.2",
     "@commitlint/config-conventional": "^21.0.2",
+    "@types/bun": "^1.2.19",
     "@types/node": "^22.19.21",
     "@typescript/native-preview": "^7.0.0-dev.20260614.1",
     "lint-staged": "^17.0.7",
@@ -37,14 +23,17 @@
     "zwkang-prettier-config": "^0.0.3"
   },
   "scripts": {
-    "check": "bun run lint && bun run typecheck && bun run format:check",
-    "changeset": "changeset",
-    "format": "prettier --write --ignore-unknown .",
-    "format:check": "prettier --check --ignore-unknown .",
-    "lint": "oxlint .",
-    "typecheck": "tsgo --noEmit -p tsconfig.base.json",
-    "release:version": "changeset version",
-    "release": "changeset publish",
+    "build": "bun run --filter './apps/*' build",
+    "check": "bun run lint && bun run typecheck && bun run test && bun run format:check && bun run build",
+    "dev": "bun run --parallel --filter './apps/*' dev",
+    "dev:backend": "bun --cwd apps/backend run dev",
+    "dev:frontend": "bun --cwd apps/frontend run dev",
+    "format": "prettier --write --ignore-unknown apps scripts AGENTS.md README.md CONTRIBUTING.md package.json tsconfig.base.json",
+    "format:check": "prettier --check --ignore-unknown apps scripts AGENTS.md README.md CONTRIBUTING.md package.json tsconfig.base.json",
+    "lint": "oxlint apps scripts",
+    "release": "bun run scripts/release.ts",
+    "test": "bun test apps",
+    "typecheck": "tsgo --noEmit -p scripts/tsconfig.json && bun run --filter './apps/*' typecheck",
     "update-deps": "bun update --latest",
     "setup": "bun install"
   },

@@ -1,0 +1,25 @@
+{
+  "name": "@sync-canvas/backend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "bun build src/index.ts src/db/migrate.ts --outdir dist --target bun",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "bun run src/db/migrate.ts",
+    "db:studio": "drizzle-kit studio",
+    "dev": "bun run --hot src/index.ts",
+    "start": "bun run dist/index.js",
+    "test": "bun test",
+    "typecheck": "tsgo --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@hono/zod-validator": "^0.9.0",
+    "drizzle-orm": "1.0.0-rc.4",
+    "hono": "^4.13.3",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.19",
+    "drizzle-kit": "1.0.0-rc.4"
+  }
+}

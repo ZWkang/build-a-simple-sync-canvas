@@ -1,42 +1,47 @@
 # Repository Guidelines
 
-## Project Structure & Module Organization
+## Repository Shape
 
-This repository is currently an empty Git scaffold; no application, test, or asset directories have been committed yet. Keep the root limited to project-wide configuration and documentation. When implementation begins, use `src/` for product code, `tests/` for automated tests, and `public/` or `assets/` for static files. Group canvas features by responsibility—for example, `src/canvas/`, `src/sync/`, and `src/ui/`—and keep shared types close to the modules that own them.
+This is a Bun application workspace, not a publishable library monorepo.
 
-## Build, Test, and Development Commands
+- `apps/backend/` owns the Hono API and SQLite persistence.
+- `apps/frontend/` owns the browser-only React application.
+- Each app has a child `AGENTS.md`; read it before changing that app.
+- Keep the root limited to workspace-wide configuration, documentation, and shared tooling.
 
-No package manager, build system, or test runner is configured yet. Do not document or rely on guessed commands. When adding the initial toolchain, expose the standard workflows through one manifest (such as `package.json`) and update this guide in the same change. Prefer predictable commands such as:
+Use feature-first organization inside both applications. Business behavior belongs under `src/features/<feature>/`; framework entrypoints and composition roots must stay thin. Keep synchronization logic deterministic and separate from rendering or pointer-event code.
 
-- `npm run dev` — start the local development server.
-- `npm test` — run the automated test suite.
-- `npm run build` — create a production build.
-- `npm run lint` — check formatting and static-analysis rules.
+## Commands
 
-Until then, use `git status` and `git diff --check` to inspect changes and whitespace errors.
+Use Bun for package management, scripts, tests, and the backend runtime.
 
-## Coding Style & Naming Conventions
+- `bun run dev` — start both applications.
+- `bun run dev:backend` — start the Hono API on port 3001.
+- `bun run dev:frontend` — start the Vite frontend on port 3000.
+- `bun run test` — run workspace tests with Bun.
+- `bun run build` — build both applications.
+- `bun run check` — run lint, typecheck, tests, formatting checks, and builds.
+- `bun run release` — verify the repository and create separate frontend/backend release archives plus a checksum manifest.
+- `bun --cwd apps/backend run db:generate` — generate a Drizzle migration.
+- `bun --cwd apps/backend run db:migrate` — apply migrations to local SQLite.
 
-Follow the formatter and linter introduced by the chosen toolchain; commit their configuration rather than relying on editor-only settings. Use two-space indentation for JavaScript, TypeScript, JSON, and CSS. Prefer `PascalCase` for components and classes, `camelCase` for functions and variables, and `kebab-case` for asset filenames. Keep synchronization logic deterministic and separate from rendering or pointer-event code.
+Do not add npm, pnpm, or yarn lockfiles. Do not restore Changesets, npm package publishing, frontend server functions, or deployment-provider configuration unless the user explicitly changes the repository boundary. Release packaging is owned by `scripts/release.ts`; child apps must remain independently packageable.
 
-## Testing Guidelines
+## Coding Style
 
-Add tests with every behavior change once a runner is configured. Name tests after observable behavior, using `*.test.ts` or the equivalent convention selected by the test framework. Prioritize sync conflict resolution, serialization, reconnect behavior, and canvas interaction boundaries. Bug fixes should include a regression test that fails before the fix.
+Follow the committed formatter and linter configuration. Use two-space indentation for JavaScript, TypeScript, JSON, and CSS. Prefer `PascalCase` for components and classes, `camelCase` for functions and variables, and `kebab-case` for assets. Do not hide failures behind mocks, swallowed exceptions, or silent fallbacks.
 
-## Commit & Pull Request Guidelines
+## Testing
 
-There is no commit history from which to infer an established convention. Use short, imperative commit subjects, optionally with a Conventional Commit prefix (for example, `feat: add stroke synchronization`). Keep commits focused. Pull requests should explain the user-visible change, list verification performed, link relevant issues, and include screenshots or recordings for canvas or UI changes.
+Add tests with every behavior change. Name tests after observable behavior with `*.test.ts` or `*.test.tsx`. Backend integration tests must use a real temporary or in-memory SQLite database and real Hono requests. Prioritize sync conflict resolution, serialization, reconnect behavior, and canvas interaction boundaries as those features arrive.
 
-## Agent skills
+## Documentation and Agent Workflows
 
-### Issue tracker
+- Issues and specs are local Markdown under `.scratch/`; see `docs/agents/issue-tracker.md`.
+- Domain vocabulary and ADR rules are in `docs/agents/domain.md`.
+- React and user-facing UI changes must follow every applicable route and review gate in `docs/agents/frontend-workflow.md`.
+- Update this guide and the affected child `AGENTS.md` when tooling or architectural boundaries change.
 
-Issues and specs are tracked as local Markdown under `.scratch/`. See `docs/agents/issue-tracker.md`.
+## Commits and Pull Requests
 
-### Domain docs
-
-This repository uses a single-context domain-doc layout. See `docs/agents/domain.md`.
-
-### Frontend workflow
-
-React and user-facing UI work must follow the skill routing and review gates in `docs/agents/frontend-workflow.md`.
+Use short, imperative commit subjects, optionally with a Conventional Commit prefix. Keep commits focused. Pull requests should explain the user-visible change, list verification performed, link relevant issues, and include screenshots or recordings for canvas or UI changes.

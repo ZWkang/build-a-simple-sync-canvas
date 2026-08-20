@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "ES2023",
     "module": "esnext",
-    "lib": ["esnext"],
+    "lib": ["ES2023"],
     "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "strict": true,
     "noUnusedLocals": true,
@@ -11,10 +12,7 @@
     "noEmit": true,
     "strictNullChecks": true,
     "resolveJsonModule": true,
-    "types": ["node"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true
-  },
-  "include": ["src/**/*.ts", "packages/*/src/**/*.ts"],
-  "exclude": ["dist", "node_modules"]
+  }
 }

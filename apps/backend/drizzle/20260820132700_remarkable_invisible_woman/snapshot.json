@@ -1,0 +1,60 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "id": "bf5df831-c401-46e6-8b10-c3b5084c422d",
+  "prevIds": ["00000000-0000-0000-0000-000000000000"],
+  "ddl": [
+    {
+      "name": "canvases",
+      "entityType": "tables"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "canvases"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "title",
+      "entityType": "columns",
+      "table": "canvases"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "canvases"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "table": "canvases"
+    },
+    {
+      "columns": ["id"],
+      "nameExplicit": false,
+      "name": "canvases_pk",
+      "table": "canvases",
+      "entityType": "pks"
+    }
+  ],
+  "renames": []
+}

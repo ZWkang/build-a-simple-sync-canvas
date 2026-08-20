@@ -12,8 +12,6 @@ Run the repository checks before opening a pull request:
 bun run check
 ```
 
-Use Changesets for package version changes:
+Keep changes inside the owning application and follow its `AGENTS.md`. Backend features live under `apps/backend/src/features/`; frontend features live under `apps/frontend/src/features/`.
 
-```bash
-bun run changeset
-```
+Create both deployable archives with `bun run release`. Version the release from the root `package.json`; do not add Changesets files.
