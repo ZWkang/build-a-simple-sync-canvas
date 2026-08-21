@@ -1,9 +1,13 @@
-import { createRootRouteWithContext, Link, Outlet } from '@tanstack/react-router';
+import { createRootRouteWithContext, Link, Outlet, type ErrorComponentProps } from '@tanstack/react-router';
 
 import type { RouterContext } from '@/app/router.tsx';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx';
+import { Button, buttonVariants } from '@/components/ui/button.tsx';
+import { TooltipProvider } from '@/components/ui/tooltip.tsx';
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootLayout,
+  errorComponent: RouteError,
   notFoundComponent: NotFoundPage,
 });
 
@@ -16,8 +20,31 @@ function RootLayout() {
       >
         跳到主要内容
       </a>
-      <Outlet />
+      <TooltipProvider>
+        <Outlet />
+      </TooltipProvider>
     </>
+  );
+}
+
+function RouteError({ error }: ErrorComponentProps) {
+  return (
+    <main id="main-content" className="grid min-h-dvh place-items-center p-6" tabIndex={-1}>
+      <Alert variant="destructive" className="max-w-lg">
+        <AlertTitle>页面发生错误</AlertTitle>
+        <AlertDescription className="flex flex-col items-start gap-4">
+          <span>{error.message}</span>
+          <div className="flex gap-2">
+            <Button type="button" onClick={() => window.location.reload()}>
+              重新加载
+            </Button>
+            <a className={buttonVariants({ variant: 'outline' })} href="/">
+              返回首页
+            </a>
+          </div>
+        </AlertDescription>
+      </Alert>
+    </main>
   );
 }
 
@@ -28,10 +55,7 @@ function NotFoundPage() {
         <p className="text-sm font-medium text-muted-foreground">404</p>
         <h1 className="text-3xl font-semibold tracking-tight">页面不存在</h1>
         <p className="text-muted-foreground">当前地址没有对应的前端路由。</p>
-        <Link
-          to="/"
-          className="touch-manipulation rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground outline-none hover:bg-primary/80 focus-visible:ring-3 focus-visible:ring-ring/40"
-        >
+        <Link to="/" className="text-sm font-medium underline underline-offset-4">
           返回首页
         </Link>
       </div>
