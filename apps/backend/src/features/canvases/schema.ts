@@ -12,6 +12,12 @@ export const createCanvasInputSchema = z.object({
   title: z.string().trim().min(1).max(120),
 });
 
+export const updateCanvasInputSchema = createCanvasInputSchema;
+
+export const canvasIdParamSchema = z.object({
+  canvasId: z.string().uuid(),
+});
+
 export const canvasResponseSchema = z.object({
   id: z.string().uuid(),
   title: z.string(),
@@ -20,4 +26,5 @@ export const canvasResponseSchema = z.object({
 });
 
 export type CreateCanvasInput = z.infer<typeof createCanvasInputSchema>;
+export type UpdateCanvasInput = z.infer<typeof updateCanvasInputSchema>;
 export type CanvasRecord = typeof canvases.$inferSelect;

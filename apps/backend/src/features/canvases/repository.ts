@@ -1,7 +1,7 @@
-import { desc } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 
 import type { AppDatabase } from '../../db/client.ts';
-import { canvases, type CanvasRecord, type CreateCanvasInput } from './schema.ts';
+import { canvases, type CanvasRecord, type CreateCanvasInput, type UpdateCanvasInput } from './schema.ts';
 
 export class CanvasRepository {
   public constructor(private readonly database: AppDatabase) {}
@@ -27,5 +27,32 @@ export class CanvasRepository {
     }
 
     return createdCanvas;
+  }
+
+  public async get(canvasId: string): Promise<CanvasRecord | undefined> {
+    const [canvas] = await this.database.select().from(canvases).where(eq(canvases.id, canvasId)).limit(1);
+    return canvas;
+  }
+
+  public async update(canvasId: string, input: UpdateCanvasInput): Promise<CanvasRecord | undefined> {
+    const [updatedCanvas] = await this.database
+      .update(canvases)
+      .set({
+        title: input.title,
+        updatedAt: new Date(),
+      })
+      .where(eq(canvases.id, canvasId))
+      .returning();
+
+    return updatedCanvas;
+  }
+
+  public async delete(canvasId: string): Promise<boolean> {
+    const [deletedCanvas] = await this.database
+      .delete(canvases)
+      .where(eq(canvases.id, canvasId))
+      .returning({ id: canvases.id });
+
+    return deletedCanvas !== undefined;
   }
 }
