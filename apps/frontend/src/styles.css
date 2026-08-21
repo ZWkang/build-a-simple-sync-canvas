@@ -152,6 +152,10 @@
     stroke-width: 2;
   }
 
+  .remote-pointer {
+    z-index: 1001;
+  }
+
   .node-color-swatch {
     display: block;
     width: 18px;

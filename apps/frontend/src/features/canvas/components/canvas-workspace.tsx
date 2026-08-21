@@ -559,7 +559,7 @@ function RemotePointer({ presence }: { presence: CollaboratorPresence }) {
 
   return (
     <div
-      className="pointer-events-none absolute flex items-start gap-1"
+      className="remote-pointer pointer-events-none absolute flex items-start gap-1"
       style={{
         transform: `translate(${presence.pointer.x}px, ${presence.pointer.y}px)`,
         color: presence.profile.color,
@@ -567,7 +567,7 @@ function RemotePointer({ presence }: { presence: CollaboratorPresence }) {
     >
       <MousePointer2Icon fill="currentColor" />
       <span
-        className="rounded-md px-2 py-1 text-xs font-medium text-white"
+        className="max-w-40 truncate rounded-md px-2 py-1 text-xs font-medium text-white"
         style={{ backgroundColor: presence.profile.color }}
       >
         {presence.profile.name}
