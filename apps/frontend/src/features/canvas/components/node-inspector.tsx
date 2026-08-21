@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty.tsx';
 import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field.tsx';
@@ -53,6 +53,8 @@ interface SelectedNodeInspectorProps {
 function SelectedNodeInspector({ document, editable, node }: SelectedNodeInspectorProps) {
   const timers = useRef(new Map<string, ReturnType<typeof setTimeout>>());
   const editableRef = useRef(editable);
+  const [bodyDraft, setBodyDraft] = useState(node.body);
+  const [titleDraft, setTitleDraft] = useState(node.title);
   editableRef.current = editable;
 
   useEffect(() => {
@@ -64,8 +66,22 @@ function SelectedNodeInspector({ document, editable, node }: SelectedNodeInspect
     if (!editable) {
       timers.current.forEach((timer) => clearTimeout(timer));
       timers.current.clear();
+      setBodyDraft(node.body);
+      setTitleDraft(node.title);
     }
-  }, [editable]);
+  }, [editable, node.body, node.title]);
+
+  useEffect(() => {
+    if (!timers.current.has('title')) {
+      setTitleDraft(node.title);
+    }
+  }, [node.title]);
+
+  useEffect(() => {
+    if (!timers.current.has('body')) {
+      setBodyDraft(node.body);
+    }
+  }, [node.body]);
 
   function schedule(field: 'body' | 'title', value: string) {
     const activeTimer = timers.current.get(field);
@@ -93,25 +109,29 @@ function SelectedNodeInspector({ document, editable, node }: SelectedNodeInspect
         <Field data-disabled={!editable}>
           <FieldLabel htmlFor={`node-title-${node.id}`}>标题</FieldLabel>
           <Input
-            key={`${node.id}:${node.title}`}
             id={`node-title-${node.id}`}
             autoComplete="off"
-            defaultValue={node.title}
             disabled={!editable}
             name="nodeTitle"
-            onChange={(event) => schedule('title', event.target.value)}
+            value={titleDraft}
+            onChange={(event) => {
+              setTitleDraft(event.target.value);
+              schedule('title', event.target.value);
+            }}
           />
         </Field>
         <Field data-disabled={!editable}>
           <FieldLabel htmlFor={`node-body-${node.id}`}>正文</FieldLabel>
           <Textarea
-            key={`${node.id}:${node.body}`}
             id={`node-body-${node.id}`}
             autoComplete="off"
-            defaultValue={node.body}
             disabled={!editable}
             name="nodeBody"
-            onChange={(event) => schedule('body', event.target.value)}
+            value={bodyDraft}
+            onChange={(event) => {
+              setBodyDraft(event.target.value);
+              schedule('body', event.target.value);
+            }}
             placeholder="补充节点说明…"
           />
           <FieldDescription>正文按整个字段同步，不进行字符级合并。</FieldDescription>
