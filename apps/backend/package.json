@@ -13,9 +13,13 @@
     "typecheck": "tsgo --noEmit -p tsconfig.json"
   },
   "dependencies": {
+    "@hocuspocus/extension-database": "^4",
+    "@hocuspocus/server": "^4",
     "@hono/zod-validator": "^0.9.0",
+    "crossws": "^0.4.12",
     "drizzle-orm": "1.0.0-rc.4",
     "hono": "^4.13.3",
+    "yjs": "^13.6.32",
     "zod": "^4.4.3"
   },
   "devDependencies": {

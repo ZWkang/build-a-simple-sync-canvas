@@ -22,8 +22,8 @@ Use Bun for package management, scripts, tests, and the backend runtime.
 - `bun run build` — build both applications.
 - `bun run check` — run lint, typecheck, tests, formatting checks, and builds.
 - `bun run release` — verify the repository and create separate frontend/backend release archives plus a checksum manifest.
-- `bun --cwd apps/backend run db:generate` — generate a Drizzle migration.
-- `bun --cwd apps/backend run db:migrate` — apply migrations to local SQLite.
+- `bun run --cwd apps/backend db:generate` — generate a Drizzle migration.
+- `bun run --cwd apps/backend db:migrate` — apply migrations to local SQLite.
 
 Do not add npm, pnpm, or yarn lockfiles. Do not restore Changesets, npm package publishing, frontend server functions, or deployment-provider configuration unless the user explicitly changes the repository boundary. Release packaging is owned by `scripts/release.ts`; child apps must remain independently packageable.
 
