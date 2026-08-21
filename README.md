@@ -52,33 +52,59 @@ React Flow 只拥有渲染与指针交互，`CanvasDocument` 是前端领域命�
 └── tsconfig.base.json
 ```
 
-## Commands
+## Quick start
+
+Prerequisite: [Bun](https://bun.sh/) 1.2.19 or newer.
 
 ```bash
 bun install
-bun run dev
-bun run dev:backend
-bun run dev:frontend
-bun run check
-bun run test
-bun run build
-bun run release
-```
-
-首次运行后端前，应用数据库迁移：
-
-```bash
+cp apps/backend/.env.example apps/backend/.env
+cp apps/frontend/.env.example apps/frontend/.env
 bun run --cwd apps/backend db:migrate
+bun run dev
 ```
+
+打开 `http://localhost:3000` 创建 Canvas，进入画布后设置当前浏览器的协作者身份。点击“复制协作链接”，再用另一个浏览器窗口打开同一 URL，即可验证节点、连接、选中状态和鼠标位置的实时同步。
 
 开发地址：前端 `http://localhost:3000`，后端 `http://localhost:3001`。后端健康检查为 `GET /api/health`。
 
-前端默认连接上述本地后端。部署到其他地址时在构建前设置：
+## Configuration
+
+后端运行时变量：
+
+| Variable       | Default                 | Purpose                |
+| -------------- | ----------------------- | ---------------------- |
+| `DATABASE_URL` | `./data/sync-canvas.db` | SQLite 数据库路径      |
+| `PORT`         | `3001`                  | HTTP 与 WebSocket 端口 |
+
+前端构建时变量：
+
+| Variable                 | Default                    | Purpose            |
+| ------------------------ | -------------------------- | ------------------ |
+| `VITE_API_URL`           | `http://localhost:3001`    | HTTP API 基础地址  |
+| `VITE_COLLABORATION_URL` | 由 `VITE_API_URL` 自动推导 | Yjs WebSocket 地址 |
+
+部署到非本地地址时，在构建前设置例如：
 
 ```bash
 VITE_API_URL=https://api.example.com
 VITE_COLLABORATION_URL=wss://api.example.com/api/collaboration
 ```
+
+## Commands
+
+| Command                                 | Purpose                                   |
+| --------------------------------------- | ----------------------------------------- |
+| `bun run dev`                           | 同时启动前后端开发服务                    |
+| `bun run dev:backend`                   | 仅启动后端                                |
+| `bun run dev:frontend`                  | 仅启动前端                                |
+| `bun run test`                          | 运行两个应用的 Bun 测试                   |
+| `bun run build`                         | 构建两个应用                              |
+| `bun run check`                         | 运行 lint、类型检查、测试、格式检查和构建 |
+| `bun run release`                       | 校验仓库并生成前后端发布归档              |
+| `bun run --cwd apps/backend db:migrate` | 应用 SQLite 迁移                          |
+
+后端 HTTP API 和 WebSocket 约定见 [apps/backend/README.md](./apps/backend/README.md)，前端领域模型与环境变量说明见 [apps/frontend/README.md](./apps/frontend/README.md)。
 
 ## Release
 
